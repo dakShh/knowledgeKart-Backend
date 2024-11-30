@@ -1,20 +1,22 @@
 import { Router, Request, Response } from 'express';
 
+import userController from '../controller/userController';
+
+// Middleware
+import { validateData } from '../middleware/validationMiddleware';
+
+// Schema
+import { userSchema } from '../schemas/userSchema';
+
 const userRoute = Router();
 
-userRoute.post('/create', (req: Request, res: Response) => {
-  res.json({
-    status: true,
-    message: 'User signed up :)'
-  });
-});
+userRoute.post(
+  '/register',
+  validateData(userSchema),
+  userController.registerUser
+);
 
-userRoute.post('/signIn', (req: Request, res: Response) => {
-  res.json({
-    status: true,
-    message: 'User signed in :)'
-  });
-});
+userRoute.post('/login', userController.login);
 
 userRoute.post('/update', (req: Request, res: Response) => {
   res.json({

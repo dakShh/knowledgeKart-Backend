@@ -3,9 +3,9 @@ import express, { ErrorRequestHandler } from 'express';
 import cors from 'cors';
 
 // Routes import
-import courseRoute from '../routes/course';
-import userRoute from '../routes/user';
-import adminRoute from '../routes/admin';
+import courseRoute from './routes/course';
+import userRoute from './routes/user';
+import adminRoute from './routes/admin';
 
 import dotenv from 'dotenv';
 dotenv.config();
