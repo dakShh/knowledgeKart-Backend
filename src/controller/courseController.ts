@@ -45,7 +45,7 @@ async function create(req: Request, res: Response) {
 
 async function preview(req: Request, res: Response) {
   try {
-    const allCourses = await Course.find({});
+    const allCourses = await Course.find({}).populate('adminId');
     res.json({
       status: true,
       data: allCourses ?? []
