@@ -60,13 +60,12 @@ async function login(req: Request, res: Response) {
 
     const user = await User.findOne({ email: userData.email });
     if (!user) {
-      res.status(404).json({ message: 'User not found' });
       throw new Error('User not found');
     }
 
     const passwordMatch = await bcrypt.compare(
       userData.password,
-      user?.password as string
+      user?.password
     );
 
     if (!passwordMatch) throw new Error('incorrect password!');
@@ -82,10 +81,11 @@ async function login(req: Request, res: Response) {
 
     res.status(200).json({ token });
   } catch (error) {
+    const errMessage = error as Error;
     res.json({
       status: false,
       message: 'Error logging in',
-      error: `${error}`
+      error: `${errMessage.message}`
     });
   }
 }

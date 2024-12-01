@@ -5,7 +5,7 @@ import { ObjectId } from 'mongoose';
 const generateToken = (res: Response, userId: string | ObjectId) => {
   const jwtSecret = process.env.JWT_SECRET || '';
   const token = jwt.sign({ userId }, jwtSecret, { expiresIn: '1h' });
-
+  return token;
   res.cookie('jwt', token, {
     httpOnly: true,
     secure: process.env.NODE_ENV !== 'development',

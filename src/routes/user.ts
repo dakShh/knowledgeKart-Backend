@@ -1,12 +1,13 @@
 import { Router, Request, Response } from 'express';
 
+// Controllers
 import userController from '../controller/userController';
 
 // Middleware
 import { validateData } from '../middleware/validationMiddleware';
 
 // Schema
-import { userSchema } from '../schemas/userSchema';
+import { userLoginSchema, userSchema } from '../schemas/userSchema';
 
 const userRoute = Router();
 
@@ -16,7 +17,7 @@ userRoute.post(
   userController.registerUser
 );
 
-userRoute.post('/login', userController.login);
+userRoute.post('/login', validateData(userLoginSchema), userController.login);
 
 userRoute.put('/update', (req: Request, res: Response) => {
   res.json({
