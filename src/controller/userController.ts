@@ -4,6 +4,8 @@ import { Request, Response, RequestHandler } from 'express';
 import User from '../model/user';
 
 import bcrypt from 'bcrypt';
+import { generateToken } from '../utils/auth';
+import { Error } from 'mongoose';
 
 interface registerUserBody {
   email: string;
@@ -23,7 +25,7 @@ async function registerUser(req: Request, res: Response) {
     const existingUser = await User.findOne({ email: userData.email });
 
     if (existingUser) {
-      res.status(404).send('User Already Exist. Please Login');
+      throw new Error('User Already Exist. Please Login');
     }
 
     const salt = 10;
@@ -36,7 +38,7 @@ async function registerUser(req: Request, res: Response) {
       password: hashedPassword
     });
 
-    const user = await newUser.save();
+    await newUser.save();
     // const token = createSecretToken(user._id);
 
     res.status(201).json({
@@ -44,10 +46,10 @@ async function registerUser(req: Request, res: Response) {
       message: 'User signed up :)'
     });
   } catch (error) {
-    console.log('error while registering: ');
+    const errMessage = error as Error;
     res.json({
       status: false,
-      message: 'Error signing up'
+      message: errMessage.message ?? 'Error signing up'
     });
   }
 }
@@ -57,9 +59,9 @@ async function login(req: Request, res: Response) {
     const userData = req.body as loginUserBody;
 
     const user = await User.findOne({ email: userData.email });
-
     if (!user) {
       res.status(404).json({ message: 'User not found' });
+      throw new Error('User not found');
     }
 
     const passwordMatch = await bcrypt.compare(
@@ -67,15 +69,18 @@ async function login(req: Request, res: Response) {
       user?.password as string
     );
 
-    if (!passwordMatch) {
-      // res.status(401).json({ message: 'Incorrect password' });
-      throw new Error('incorrect password!');
-    }
+    if (!passwordMatch) throw new Error('incorrect password!');
+    const token = generateToken(res, user._id);
 
-    res.json({
-      status: true,
-      message: 'Authenticated'
-    });
+    // res
+    //   .cookie('access_token', token, {
+    //     httpOnly: true,
+    //     secure: process.env.NODE_ENV === 'production'
+    //   })
+    //   .status(200)
+    //   .json({ message: 'Logged in successfully' });
+
+    res.status(200).json({ token });
   } catch (error) {
     res.json({
       status: false,

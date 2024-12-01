@@ -13,6 +13,7 @@ export function validateData(schema: z.ZodObject<any, any>) {
         const errorMessages = error.errors.map((issue: any) => ({
           message: `${issue.path.join('.')} is ${issue.message}`
         }));
+
         res
           .status(StatusCodes.BAD_REQUEST)
           .json({ error: 'Invalid data', details: errorMessages });
@@ -21,6 +22,7 @@ export function validateData(schema: z.ZodObject<any, any>) {
           .status(StatusCodes.INTERNAL_SERVER_ERROR)
           .json({ error: 'Internal Server Error' });
       }
+      return;
     }
   };
 }

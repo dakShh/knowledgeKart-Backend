@@ -18,7 +18,7 @@ userRoute.post(
 
 userRoute.post('/login', userController.login);
 
-userRoute.post('/update', (req: Request, res: Response) => {
+userRoute.put('/update', (req: Request, res: Response) => {
   res.json({
     status: true,
     message: 'User updated :)'
