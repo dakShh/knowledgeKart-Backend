@@ -17,3 +17,11 @@ export interface IAdmin extends Document {
   password: string;
   createdAt: Date;
 }
+
+export interface ICourse extends Document {
+  title: string;
+  description: string;
+  adminId: ObjectId; // admin model reference
+  imageUrl: string;
+  price: string;
+}

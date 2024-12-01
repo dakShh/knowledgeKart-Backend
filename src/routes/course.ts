@@ -1,16 +1,16 @@
-import express, { Request, Response, Router } from 'express';
+import { Request, Response, Router } from 'express';
+import courseController from '../controller/courseController';
+import { validateData } from '../middleware/validationMiddleware';
+import { courseSchema } from '../schemas/courseSchema';
 
-const coursesRoute = Router();
+const courseRoute = Router();
 
-coursesRoute.post('/create', (req: Request, res: Response) => {
-  res.status(201).json({ message: 'Course created successfully' });
-});
+courseRoute.post(
+  '/create',
+  validateData(courseSchema),
+  courseController.create
+);
 
-coursesRoute.get('/preview', (req: Request, res: Response) => {
-  res.json({
-    status: 200,
-    message: 'heres the list of active coursescourses'
-  });
-});
+courseRoute.get('/preview', courseController.preview);
 
-export default coursesRoute;
+export default courseRoute;
