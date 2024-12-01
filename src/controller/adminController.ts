@@ -69,7 +69,6 @@ async function login(req: Request, res: Response) {
     if (!passwordMatch) throw new Error('incorrect password!');
 
     const token = generateToken(res, existingAdmin._id);
-    console.log({ token });
     res.status(201).json({ token });
   } catch (error) {
     const errMessage = error as Error;
