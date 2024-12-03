@@ -47,7 +47,7 @@ async function registerUser(req: Request, res: Response) {
     });
   } catch (error) {
     const errMessage = error as Error;
-    res.json({
+    res.status(401).json({
       status: false,
       message: errMessage.message ?? 'Error signing up'
     });
@@ -68,21 +68,16 @@ async function login(req: Request, res: Response) {
       user?.password
     );
 
-    if (!passwordMatch) throw new Error('incorrect password!');
-    const token = generateToken(res, user._id);
+    if (!passwordMatch) throw new Error('Incorrect password!');
 
-    // res
-    //   .cookie('access_token', token, {
-    //     httpOnly: true,
-    //     secure: process.env.NODE_ENV === 'production'
-    //   })
-    //   .status(200)
-    //   .json({ message: 'Logged in successfully' });
+    const userJwtSecret = process.env.USER_JWT_SECRET || '';
+    const token = generateToken(res, userJwtSecret, user._id);
 
-    res.status(200).json({ token });
+    res.status(200).json({ status: true, user, token });
   } catch (error) {
     const errMessage = error as Error;
-    res.json({
+    console.log('error: ', errMessage.message);
+    res.status(401).json({
       status: false,
       message: 'Error logging in',
       error: `${errMessage.message}`

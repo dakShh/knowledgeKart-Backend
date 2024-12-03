@@ -18,25 +18,18 @@ interface CourseBody {
 
 async function create(req: Request, res: Response) {
   try {
-    const token = req.headers.authorization || '';
-    if (!token) throw new Error('Unauthenticated!');
-
-    const jwtSecret = process.env.JWT_SECRET || '';
-
-    const tokenData = jwt.verify(token, jwtSecret) as ITokenPayload;
-
     const courseBody = req.body as CourseBody;
-    const course = new Course({ ...courseBody, adminId: tokenData.userId });
+    const course = new Course(courseBody);
     await course.save();
 
-    res.json({
+    res.status(200).json({
       status: true,
       message: 'Course Added!',
-      course
+      course: course
     });
   } catch (error) {
     const errMessage = error as Error;
-    res.json({
+    res.status(401).json({
       status: false,
       message: errMessage.message ?? 'Error creating course'
     });
@@ -46,15 +39,15 @@ async function create(req: Request, res: Response) {
 async function preview(req: Request, res: Response) {
   try {
     const allCourses = await Course.find({}).populate('adminId');
-    res.json({
+    res.status(201).json({
       status: true,
       data: allCourses ?? []
     });
   } catch (error) {
     const errMessage = error as Error;
-    res.json({
+    res.status(401).json({
       status: false,
-      message: errMessage.message ?? 'Error creating course'
+      message: errMessage.message ?? 'Error fetching all course'
     });
   }
 }

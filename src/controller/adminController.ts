@@ -68,10 +68,13 @@ async function login(req: Request, res: Response) {
 
     if (!passwordMatch) throw new Error('incorrect password!');
 
-    const token = generateToken(res, existingAdmin._id);
+    const adminJwtToken = process.env.ADMIN_JWT_SECRET || '';
+    const token = generateToken(res, adminJwtToken, existingAdmin._id);
+
     res.status(201).json({ token });
   } catch (error) {
     const errMessage = error as Error;
+    console.log('errMessage: ', errMessage);
     res.json({
       status: false,
       message: errMessage.message ?? 'Error logging in'

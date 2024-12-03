@@ -2,8 +2,11 @@ import jwt from 'jsonwebtoken';
 import { Response } from 'express';
 import { ObjectId } from 'mongoose';
 
-const generateToken = (res: Response, userId: string | ObjectId) => {
-  const jwtSecret = process.env.JWT_SECRET || '';
+const generateToken = (
+  res: Response,
+  jwtSecret: string,
+  userId: string | ObjectId
+) => {
   const token = jwt.sign({ userId }, jwtSecret, { expiresIn: '1h' });
   return token;
   res.cookie('jwt', token, {
