@@ -79,8 +79,7 @@ async function login(req: Request, res: Response) {
     console.log('error: ', errMessage.message);
     res.status(401).json({
       status: false,
-      message: 'Error logging in',
-      error: `${errMessage.message}`
+      message: errMessage.message ?? 'Error logging in'
     });
   }
 }

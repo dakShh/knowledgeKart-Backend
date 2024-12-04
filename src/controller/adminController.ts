@@ -55,27 +55,27 @@ async function login(req: Request, res: Response) {
   try {
     const adminBody = req.body as AdminLoginBody;
 
-    const existingAdmin = await Admin.findOne({ email: adminBody.email });
+    const user = await Admin.findOne({ email: adminBody.email });
 
-    if (!existingAdmin) {
-      throw new Error('Account not found. Please register');
+    if (!user) {
+      throw new Error('No Creator Account. Please register');
     }
 
     const passwordMatch = await bcrypt.compare(
       adminBody.password,
-      existingAdmin?.password as string
+      user?.password as string
     );
 
     if (!passwordMatch) throw new Error('incorrect password!');
 
     const adminJwtToken = process.env.ADMIN_JWT_SECRET || '';
-    const token = generateToken(res, adminJwtToken, existingAdmin._id);
+    const token = generateToken(res, adminJwtToken, user._id);
 
-    res.status(201).json({ token });
+    res.status(200).json({ status: true, user, token });
   } catch (error) {
     const errMessage = error as Error;
     console.log('errMessage: ', errMessage);
-    res.json({
+    res.status(401).json({
       status: false,
       message: errMessage.message ?? 'Error logging in'
     });
