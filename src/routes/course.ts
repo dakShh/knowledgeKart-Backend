@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import courseController from '../controller/courseController';
 import { validateData } from '../middleware/validationMiddleware';
+import { verifyAdminToken } from '../middleware/AdminAuthMiddleware';
 import { courseSchema } from '../schemas/courseSchema';
-import { verifyAdminToken } from '../middleware/adminAuthMiddleware';
 
 const courseRoute = Router();
 

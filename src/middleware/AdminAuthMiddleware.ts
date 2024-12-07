@@ -18,7 +18,7 @@ export function verifyAdminToken(
 ) {
   const token = req.headers['authorization']?.replace('Bearer ', '') || '';
   const jwtSecret = process.env.ADMIN_JWT_SECRET || '';
-  if (!token) res.status(401).json({ error: 'Access denied' });
+  if (!token) res.status(401).json({ error: 'Access denied | No token' });
 
   try {
     const decoded = jwt.verify(token, jwtSecret) as TokenData;
@@ -26,6 +26,9 @@ export function verifyAdminToken(
     next();
   } catch (error) {
     const err = error as JsonWebTokenError;
+    console.log('***************');
+    console.log(err.message);
     res.status(401).json({ error: err.message });
+    return;
   }
 }

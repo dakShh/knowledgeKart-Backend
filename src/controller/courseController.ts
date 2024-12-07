@@ -24,7 +24,7 @@ async function create(req: Request, res: Response) {
 
     res.status(200).json({
       status: true,
-      message: 'Course Added!',
+      message: `${course.title} Course Added! `,
       course: course
     });
   } catch (error) {
