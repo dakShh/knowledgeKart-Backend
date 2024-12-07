@@ -52,4 +52,41 @@ async function preview(req: Request, res: Response) {
   }
 }
 
-export default { create, preview };
+async function getAdminCourseList(req: Request, res: Response) {
+  try {
+    const allCourses = await Course.find({
+      adminId: req.body.adminId || ''
+    });
+    res.status(201).json({
+      status: true,
+      data: allCourses ?? []
+    });
+  } catch (error) {
+    const errMessage = error as Error;
+    res.status(401).json({
+      status: false,
+      message: errMessage.message ?? 'Error fetching all course'
+    });
+  }
+}
+
+async function getCourseById(req: Request, res: Response) {
+  try {
+    const course = await Course.findOne({
+      _id: req.params.id || ''
+    }).populate('adminId');
+
+    res.status(201).json({
+      status: true,
+      data: course
+    });
+  } catch (error) {
+    const errMessage = error as Error;
+    console.log({ errMessage });
+    res.status(401).json({
+      status: false,
+      message: errMessage.message ?? 'Error fetching course information'
+    });
+  }
+}
+export default { create, preview, getAdminCourseList, getCourseById };

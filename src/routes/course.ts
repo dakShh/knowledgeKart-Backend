@@ -13,6 +13,13 @@ courseRoute.post(
   courseController.create
 );
 
-courseRoute.get('/preview', courseController.preview);
+courseRoute.post('/preview', courseController.preview);
+courseRoute.get('/course/:id', courseController.getCourseById);
+
+courseRoute.get(
+  '/course',
+  verifyAdminToken,
+  courseController.getAdminCourseList
+);
 
 export default courseRoute;
