@@ -24,4 +24,5 @@ export interface ICourse extends Document {
   adminId: ObjectId; // admin model reference
   imageUrl: string;
   price: string;
+  content: string[];
 }

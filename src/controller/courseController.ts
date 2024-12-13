@@ -3,6 +3,8 @@ import { Error } from 'mongoose';
 
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import Course from '../model/course';
+import { cloudinaryUploadImage } from '../cloudinary';
+import fs from 'fs';
 
 interface ITokenPayload extends JwtPayload {
   userId: string;
@@ -14,14 +16,26 @@ interface CourseBody {
   adminId: string;
   imageUrl?: string;
   price: string;
+  content: string[];
 }
 
 async function create(req: Request, res: Response) {
   try {
-    const courseBody = req.body as CourseBody;
-    const course = new Course(courseBody);
-    await course.save();
+    const urls = [];
+    const files = req.files;
 
+    for (const file of files as Express.Multer.File[]) {
+      const { path } = file;
+      const res = await cloudinaryUploadImage(path);
+      urls.push(res.secure_url);
+      fs.unlinkSync(path);
+    }
+
+    const courseBody = req.body as CourseBody;
+
+    const course = new Course(courseBody);
+    course.content = urls;
+    await course.save();
     res.status(200).json({
       status: true,
       message: `${course.title} Course Added! `,

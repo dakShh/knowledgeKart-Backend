@@ -8,7 +8,8 @@ const courseSchema = new Schema<ICourse>({
   description: String,
   adminId: { type: Schema.Types.ObjectId, ref: 'Admin' },
   imageUrl: String,
-  price: String
+  price: String,
+  content: [String]
 });
 
 const Course = model('Course', courseSchema);

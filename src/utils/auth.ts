@@ -7,7 +7,7 @@ const generateToken = (
   jwtSecret: string,
   userId: string | ObjectId
 ) => {
-  const token = jwt.sign({ userId }, jwtSecret, { expiresIn: '1h' });
+  const token = jwt.sign({ userId }, jwtSecret, { expiresIn: '10h' });
   return token;
   res.cookie('jwt', token, {
     httpOnly: true,

@@ -3,13 +3,15 @@ import courseController from '../controller/courseController';
 import { validateData } from '../middleware/validationMiddleware';
 import { verifyAdminToken } from '../middleware/AdminAuthMiddleware';
 import { courseSchema } from '../schemas/courseSchema';
+import { upload } from '../multer';
 
 const courseRoute = Router();
 
 courseRoute.post(
   '/create',
-  validateData(courseSchema),
   verifyAdminToken,
+  upload.array('content'),
+  validateData(courseSchema),
   courseController.create
 );
 
