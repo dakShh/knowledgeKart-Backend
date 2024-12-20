@@ -9,8 +9,8 @@ const courseRoute = Router();
 
 courseRoute.post(
   '/create',
-  verifyAdminToken,
   upload.any(),
+  verifyAdminToken,
   // validateData(courseSchema),
   courseController.create
 );
