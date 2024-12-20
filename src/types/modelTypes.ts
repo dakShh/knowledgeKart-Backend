@@ -22,7 +22,11 @@ export interface ICourse extends Document {
   title: string;
   description: string;
   adminId: ObjectId; // admin model reference
-  imageUrl: string;
   price: string;
-  content: string[];
+  thumbnail: string;
+  content: {
+    title: string;
+    description: string;
+    video: string;
+  }[];
 }

@@ -8,6 +8,7 @@ const courseSchema = new Schema<ICourse>({
   description: String,
   adminId: { type: Schema.Types.ObjectId, ref: 'Admin' },
   price: String,
+  thumbnail: String,
   content: [
     {
       title: String,
