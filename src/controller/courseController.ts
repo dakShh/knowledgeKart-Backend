@@ -3,7 +3,7 @@ import { Error } from 'mongoose';
 
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import Course from '../model/course';
-import { cloudinaryUploadImage } from '../cloudinary';
+import { cloudinaryUploadFile } from '../cloudinary';
 import fs from 'fs';
 
 interface ITokenPayload extends JwtPayload {
@@ -13,29 +13,47 @@ interface ITokenPayload extends JwtPayload {
 interface CourseBody {
   title: string;
   description: string;
-  adminId: string;
-  imageUrl?: string;
   price: string;
-  content: string[];
+  adminId: string;
+  content: {
+    title: string;
+    description: string;
+    video: string;
+  };
 }
 
 async function create(req: Request, res: Response) {
   try {
-    const urls = [];
     const files = req.files;
+    const body = req.body;
 
-    for (const file of files as Express.Multer.File[]) {
-      const { path } = file;
-      const res = await cloudinaryUploadImage(path);
-      urls.push(res.secure_url);
+    // UPLOAD THUMBNAIL
+    const thumbnailFiles = (files as Express.Multer.File[])?.filter(
+      (file) => file.fieldname === 'thumbnail'
+    )?.[0];
+
+    if (thumbnailFiles) {
+      const { path } = thumbnailFiles;
+      const res = await cloudinaryUploadFile(path);
+      body.thumbnail = res?.secure_url;
       fs.unlinkSync(path);
     }
 
-    const courseBody = req.body as CourseBody;
+    // UPLOAD VIDEO
+    const videoFiles = (files as Express.Multer.File[])?.filter(
+      (file) => file.fieldname !== 'thumbnail'
+    );
 
-    const course = new Course(courseBody);
-    course.content = urls;
+    for (let i = 0; i < body.content.length; i++) {
+      const { path } = videoFiles[i];
+      const res = await cloudinaryUploadFile(path);
+      body.content[i].video = res?.secure_url;
+      fs.unlinkSync(path);
+    }
+
+    const course = new Course(body as CourseBody);
     await course.save();
+
     res.status(200).json({
       status: true,
       message: `${course.title} Course Added! `,

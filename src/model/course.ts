@@ -7,9 +7,14 @@ const courseSchema = new Schema<ICourse>({
   title: String,
   description: String,
   adminId: { type: Schema.Types.ObjectId, ref: 'Admin' },
-  imageUrl: String,
   price: String,
-  content: [String]
+  content: [
+    {
+      title: String,
+      description: String,
+      video: String
+    }
+  ]
 });
 
 const Course = model('Course', courseSchema);

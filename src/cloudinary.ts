@@ -8,8 +8,8 @@ export default cloudinary.config({
 
 // api env = CLOUDINARY_URL=cloudinary://164138173651931:p7qoAqaGqUXngFzK7NrO40pN-H0@dofbf3yyk
 
-// Cloudinary Upload Image
-export const cloudinaryUploadImage = async (fileToUpload: string) => {
+// Cloudinary Upload File
+export const cloudinaryUploadFile = async (fileToUpload: string) => {
   try {
     const data = await cloudinary.uploader.upload(fileToUpload, {
       resource_type: 'auto'
@@ -18,12 +18,12 @@ export const cloudinaryUploadImage = async (fileToUpload: string) => {
     return data;
   } catch (error) {
     console.log(error);
-    throw new Error('Internal Server Error (cloudinary)');
+    // throw new Error('Internal Server Error (cloudinary)');
   }
 };
 
-// Cloudinary Remove Image
-export const cloudinaryRemoveImage = async (imagePublicId: string) => {
+// Cloudinary Remove File
+export const cloudinaryRemoveFile = async (imagePublicId: string) => {
   try {
     const result = await cloudinary.uploader.destroy(imagePublicId);
     return result;
@@ -33,8 +33,8 @@ export const cloudinaryRemoveImage = async (imagePublicId: string) => {
   }
 };
 
-// Cloudinary Remove Multiple Image
-export const cloudinaryRemoveMultipleImage = async (publicIds: string[]) => {
+// Cloudinary Remove Multiple Files
+export const cloudinaryRemoveMultipleFiles = async (publicIds: string[]) => {
   try {
     const result = await cloudinary.api.delete_resources(publicIds);
     return result;
