@@ -17,6 +17,10 @@ app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+app.use('/', (req, res) => {
+  res.send('hello sexy');
+});
+
 app.use('/api/v1/course', courseRoute);
 app.use('/api/v1/user', userRoute);
 app.use('/api/v1/admin', adminRoute);
