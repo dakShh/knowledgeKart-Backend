@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import express, { ErrorRequestHandler } from 'express';
+import express, { ErrorRequestHandler, Request, Response } from 'express';
 import cors from 'cors';
 
 // Routes import
@@ -17,8 +17,8 @@ app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.use('/', (req, res) => {
-  res.send('hello sexy');
+app.get('/api', (req: Request, res: Response) => {
+  res.status(201).json({ message: 'Welcome to Auth ts' });
 });
 
 app.use('/api/v1/course', courseRoute);
