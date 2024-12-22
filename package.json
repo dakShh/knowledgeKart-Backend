@@ -4,10 +4,11 @@
   "main": "index.ts",
   "type": "module",
   "scripts": {
-    "start": "node src/index.ts",
+    "start": "ts-node src/index.ts",
     "build": "tsc",
     "ts.check": "tsc --project tsconfig.json",
-    "add-build": "git add dist"
+    "add-build": "git add dist",
+    "dev": "nodemon"
   },
   "keywords": [],
   "author": "",
