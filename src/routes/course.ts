@@ -2,6 +2,7 @@ import { Router } from 'express';
 import courseController from '../controller/courseController';
 import { validateData } from '../middleware/validationMiddleware';
 import { verifyAdminToken } from '../middleware/AdminAuthMiddleware';
+import { verifyUserToken } from '../middleware/UserAuthMiddleware';
 import { courseSchema } from '../schemas/courseSchema';
 import { upload } from '../multer';
 
@@ -22,6 +23,12 @@ courseRoute.get(
   '/course',
   verifyAdminToken,
   courseController.getAdminCourseList
+);
+
+courseRoute.get(
+  '/purchase/:courseId',
+  verifyUserToken,
+  courseController.purchaseCourse
 );
 
 export default courseRoute;

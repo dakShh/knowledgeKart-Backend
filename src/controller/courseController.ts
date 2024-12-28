@@ -5,7 +5,8 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
 import Course from '../model/course';
 import { cloudinaryUploadFile } from '../cloudinary';
 import fs from 'fs';
-
+import Purchase from '../model/purchases';
+import mongoose from 'mongoose';
 interface ITokenPayload extends JwtPayload {
   userId: string;
 }
@@ -121,4 +122,45 @@ async function getCourseById(req: Request, res: Response) {
     });
   }
 }
-export default { create, preview, getAdminCourseList, getCourseById };
+
+async function purchaseCourse(req: Request, res: Response) {
+  try {
+    const body = req.body;
+    const params = req.params;
+
+    const checkIfEntrolled = await Purchase.findOne({
+      userId: body.userId,
+      courseId: params.courseId
+    });
+
+    if (checkIfEntrolled) {
+      throw new Error('Already Enrolled!! :)');
+    }
+
+    const purchase = new Purchase({
+      userId: body.userId,
+      courseId: params.courseId
+    });
+
+    await purchase.save();
+    res.status(200).json({
+      status: true,
+      message: `Successfully Purchased Course! `
+    });
+  } catch (error) {
+    const errMessage = error as Error;
+    console.log({ errMessage });
+    res.status(401).json({
+      status: false,
+      message: errMessage.message ?? 'Error while purchasing the course'
+    });
+  }
+}
+
+export default {
+  create,
+  preview,
+  getAdminCourseList,
+  getCourseById,
+  purchaseCourse
+};
