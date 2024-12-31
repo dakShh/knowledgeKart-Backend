@@ -89,13 +89,16 @@ async function getAdminCourseList(req: Request, res: Response) {
   try {
     const allCourses = await Course.find({
       adminId: req.body.adminId || ''
-    });
+    }).populate('adminId');
+
     res.status(201).json({
       status: true,
       data: allCourses ?? []
     });
   } catch (error) {
     const errMessage = error as Error;
+    console.log('----------------------------------------');
+    console.log('err: ', errMessage.message);
     res.status(401).json({
       status: false,
       message: errMessage.message ?? 'Error fetching all course'

@@ -26,7 +26,7 @@ export function verifyAdminToken(
     next();
   } catch (error) {
     const err = error as JsonWebTokenError;
-    console.log(err.message);
+    console.log('------------------------', err.message);
     res.status(401).json({ error: err.message });
     return;
   }

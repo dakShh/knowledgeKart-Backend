@@ -17,10 +17,11 @@ courseRoute.post(
 );
 
 courseRoute.post('/preview', courseController.preview);
-courseRoute.get('/:id', courseController.getCourseById);
+
+courseRoute.get('/course/:id', courseController.getCourseById);
 
 courseRoute.get(
-  '/course',
+  '/course-list',
   verifyAdminToken,
   courseController.getAdminCourseList
 );
