@@ -31,4 +31,10 @@ courseRoute.get(
   courseController.purchaseCourse
 );
 
+courseRoute.get(
+  '/checkEnrollment/:courseId',
+  verifyUserToken,
+  courseController.checkEnrollment
+);
+
 export default courseRoute;

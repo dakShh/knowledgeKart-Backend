@@ -157,10 +157,38 @@ async function purchaseCourse(req: Request, res: Response) {
   }
 }
 
+async function checkEnrollment(req: Request, res: Response) {
+  try {
+    console.log('req: ', req.body);
+    console.log('courseid', req.params);
+
+    const body = req.body;
+    const params = req.params;
+
+    const hasPurchased = await Purchase.findOne({
+      userId: body.userId,
+      courseId: params.courseId
+    });
+
+    res.json({
+      status: true,
+      data: hasPurchased
+    });
+  } catch (error) {
+    const errMessage = error as Error;
+    console.log({ errMessage });
+    res.status(401).json({
+      status: false,
+      message: errMessage.message ?? 'Error while purchasing the course'
+    });
+  }
+}
+
 export default {
   create,
   preview,
   getAdminCourseList,
   getCourseById,
-  purchaseCourse
+  purchaseCourse,
+  checkEnrollment
 };
