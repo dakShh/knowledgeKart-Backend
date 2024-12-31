@@ -6,7 +6,7 @@ import Course from '../model/course';
 import { cloudinaryUploadFile } from '../cloudinary';
 import fs from 'fs';
 import Purchase from '../model/purchases';
-import mongoose from 'mongoose';
+
 interface ITokenPayload extends JwtPayload {
   userId: string;
 }
@@ -105,9 +105,16 @@ async function getAdminCourseList(req: Request, res: Response) {
 
 async function getCourseById(req: Request, res: Response) {
   try {
-    const course = await Course.findOne({
-      _id: req.params.id || ''
+    const courseId = req.params.id;
+    let course = await Course.findOne({
+      _id: courseId || ''
     }).populate('adminId');
+
+    const students = await Purchase.find({ courseId }).countDocuments();
+
+    if (course) {
+      course.noOfStudents = students ?? 0;
+    }
 
     res.status(201).json({
       status: true,
@@ -159,9 +166,6 @@ async function purchaseCourse(req: Request, res: Response) {
 
 async function checkEnrollment(req: Request, res: Response) {
   try {
-    console.log('req: ', req.body);
-    console.log('courseid', req.params);
-
     const body = req.body;
     const params = req.params;
 

@@ -15,7 +15,8 @@ const courseSchema = new Schema<ICourse>({
       description: String,
       video: String
     }
-  ]
+  ],
+  noOfStudents: Number
 });
 
 const Course = model('Course', courseSchema);

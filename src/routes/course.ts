@@ -17,7 +17,7 @@ courseRoute.post(
 );
 
 courseRoute.post('/preview', courseController.preview);
-courseRoute.get('/course/:id', courseController.getCourseById);
+courseRoute.get('/:id', courseController.getCourseById);
 
 courseRoute.get(
   '/course',
