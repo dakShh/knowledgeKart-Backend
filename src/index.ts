@@ -6,6 +6,7 @@ import cors from 'cors';
 import courseRoute from './routes/course';
 import userRoute from './routes/user';
 import adminRoute from './routes/admin';
+import dashboardRoute from './routes/dashboard';
 
 import dotenv from 'dotenv';
 dotenv.config();
@@ -24,6 +25,7 @@ app.get('/', (req: Request, res: Response) => {
 app.use('/api/v1/course', courseRoute);
 app.use('/api/v1/user', userRoute);
 app.use('/api/v1/admin', adminRoute);
+app.use('/api/v1/dashboard', dashboardRoute);
 
 async function main() {
   try {

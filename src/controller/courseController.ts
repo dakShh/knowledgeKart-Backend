@@ -153,6 +153,11 @@ async function purchaseCourse(req: Request, res: Response) {
     });
 
     await purchase.save();
+    await Course.updateOne(
+      { _id: params.courseId },
+      { $inc: { noOfStudents: 1 } }
+    );
+
     res.status(200).json({
       status: true,
       message: `Successfully Purchased Course! `
